@@ -1,13 +1,17 @@
-const puppeteer = require("puppeteer");
+const express = require("express");
+const { scrapeLogic } = require("./scrapeLogic");
+const app = express();
 
-(async () => {
-  const browser = await puppeteer.launch({
-    puppeteer: {
-      headless: true,
-    },
-  });
-  const page = await browser.newPage();
-  await page.goto("https://example.com");
-  await page.screenshot({ path: 'example.png' });
-  await browser.close();
-})();
+const PORT = process.env.PORT || 4000;
+
+app.get("/scrape", (req, res) => {
+  scrapeLogic(res);
+});
+
+app.get("/", (req, res) => {
+  res.send("Render Puppeteer server is up and running!");
+});
+
+app.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}`);
+});
